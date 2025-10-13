@@ -1,0 +1,32 @@
+{
+    "compilerOptions": {
+        "rootDir": "./",
+        "outDir": "./build",
+        "module": "nodenext",
+        "target": "esnext",
+        "lib": [
+            "esnext"
+        ],
+        "types": [
+            "node"
+        ],
+        "sourceMap": true,
+        "declaration": true,
+        "declarationMap": true,
+        "strict": true,
+        "jsx": "react-jsx",
+        "verbatimModuleSyntax": true,
+        "isolatedModules": true,
+        "noUncheckedIndexedAccess": true,
+        "exactOptionalPropertyTypes": true,
+        "skipLibCheck": true,
+        "moduleDetection": "force"
+    },
+    "ts-node": {
+        "esm": true
+    },
+    "include": [
+        "src/**/*",
+        "prisma/**/*"
+    ]
+}
