@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react"
 import io, { type Socket } from "socket.io-client"
 import { PhoneOff, Mic, MicOff, Video, VideoOff, Copy, Check, Settings } from "lucide-react"
 
-const SIGNALING_SERVER = "http://localhost:5000"
+const SIGNALING_SERVER = process.env.NEXT_PUBLIC_API_URL;
 const ICE_SERVERS = [
     { urls: "stun:stun.l.google.com:19302" },
     { urls: "stun:stun1.l.google.com:19302" },
