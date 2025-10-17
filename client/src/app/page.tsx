@@ -1,103 +1,134 @@
-import Image from "next/image";
+"use client"
+
+import { useRouter } from "next/navigation"
+import { useState } from "react"
+import { v4 as uuidv4 } from "uuid"
+import { Video, Plus, LogIn, Copy, Check } from "lucide-react"
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const router = useRouter()
+  const [roomId, setRoomId] = useState("")
+  const [copied, setCopied] = useState(false)
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const createRoom = () => {
+    const id = uuidv4()
+    router.push(`/room/${id}`)
+  }
+
+  const joinRoom = () => {
+    if (!roomId.trim()) {
+      alert("Please enter a room ID")
+      return
+    }
+    router.push(`/room/${roomId}`)
+  }
+
+  const copyToClipboard = () => {
+    if (roomId) {
+      navigator.clipboard.writeText(roomId)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-card flex items-center justify-center p-4">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
+        <div
+          className="absolute bottom-20 right-10 w-72 h-72 bg-accent/10 rounded-full blur-3xl animate-pulse"
+          style={{ animationDelay: "1s" }}
+        ></div>
+      </div>
+
+      <div className="relative z-10 w-full max-w-md">
+        {/* Header */}
+        <div className="text-center mb-12 animate-slide-in-up">
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="p-3 bg-gradient-to-br from-primary to-accent rounded-xl shadow-lg">
+              <Video className="w-8 h-8 text-primary-foreground" />
+            </div>
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              ConnectCall
+            </h1>
+          </div>
+          <p className="text-muted-foreground text-lg">Crystal clear peer-to-peer video calls</p>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+
+        {/* Create Room Card */}
+        <div
+          className="bg-card border border-border rounded-2xl p-8 mb-6 shadow-xl hover:shadow-2xl transition-all duration-300 animate-fade-in"
+          style={{ animationDelay: "0.1s" }}
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+          <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+            <Plus className="w-5 h-5 text-primary" />
+            Start a New Call
+          </h2>
+          <p className="text-muted-foreground text-sm mb-6">Create a new room and share the ID with others</p>
+          <button
+            onClick={createRoom}
+            className="w-full bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-primary-foreground font-semibold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 group"
+          >
+            <Plus className="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
+            Create Room
+          </button>
+        </div>
+
+        {/* Join Room Card */}
+        <div
+          className="bg-card border border-border rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 animate-fade-in"
+          style={{ animationDelay: "0.2s" }}
         >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+          <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+            <LogIn className="w-5 h-5 text-accent" />
+            Join Existing Call
+          </h2>
+          <p className="text-muted-foreground text-sm mb-6">Enter a room ID to join an active call</p>
+
+          <div className="space-y-3">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Paste room ID here..."
+                value={roomId}
+                onChange={(e) => setRoomId(e.target.value)}
+                onKeyPress={(e) => e.key === "Enter" && joinRoom()}
+                className="w-full bg-input border border-border rounded-xl px-4 py-3 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300"
+              />
+              {roomId && (
+                <button
+                  onClick={copyToClipboard}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-2 hover:bg-muted rounded-lg transition-colors duration-200"
+                  title="Copy room ID"
+                >
+                  {copied ? (
+                    <Check className="w-4 h-4 text-primary" />
+                  ) : (
+                    <Copy className="w-4 h-4 text-muted-foreground hover:text-foreground" />
+                  )}
+                </button>
+              )}
+            </div>
+
+            <button
+              onClick={joinRoom}
+              disabled={!roomId.trim()}
+              className="w-full bg-secondary hover:bg-secondary/90 disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed text-secondary-foreground font-semibold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 disabled:scale-100 flex items-center justify-center gap-2"
+            >
+              <LogIn className="w-5 h-5" />
+              Join Call
+            </button>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div
+          className="text-center mt-8 text-muted-foreground text-sm animate-fade-in"
+          style={{ animationDelay: "0.3s" }}
         >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          <p>Secure peer-to-peer connection • No data stored</p>
+        </div>
+      </div>
     </div>
-  );
+  )
 }
